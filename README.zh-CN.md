@@ -89,6 +89,234 @@ $WP_BIN = "$WP_SKILL_DIR\bin\windows-amd64\work-pilot.exe"
 
 首次使用时确认时区与工作日，可选设置助理称呼。可选日历或通知渠道尚未配置，不会阻塞普通任务记录。默认数据目录为操作系统用户配置目录下的 `work-pilot`；可在命令前传入 `--data-dir PATH` 选择其他数据目录。
 
+## 接入外部日历
+
+下列示例使用已安装的 `WP_BIN` 和 macOS/Linux 的 POSIX Shell。连接配置与密钥应放在 Skill 和本仓库之外，例如：
+
+```sh
+WP_CONFIG_DIR="$HOME/.config/work-pilot-connections"
+mkdir -p "$WP_CONFIG_DIR"
+"$WP_BIN" config set --timezone Asia/Shanghai --workdays 1,2,3,4,5
+```
+
+请按实际情况选择时区和工作日。Windows 使用绝对配置目录，通过 `$env:变量名 = '值'` 设置环境变量，以 `& $WP_BIN` 调用程序，JSON 格式相同。环境变量必须传给实际运行 Work Pilot 的进程，包括以后配置的调度器。
+
+<details>
+<summary><strong>macOS 系统日历：授权辅助程序，再选择日历</strong></summary>
+
+在固定的 Skill 安装位置，运行与你的 Mac 匹配的辅助程序：
+
+```sh
+WP_BRIDGE="$WP_SKILL_DIR/references/native/darwin-arm64/work-pilot-eventkit"
+"$WP_BRIDGE" authorize
+"$WP_BRIDGE" list-calendars
+```
+
+Intel Mac 改用 `darwin-amd64`。接受 macOS 日历权限提示，从返回的日历信息中选择 ID。系统要求授予日历访问权限，Work Pilot 本身只读取事件。若拒绝过授权，可在“系统设置 → 隐私与安全性 → 日历”中检查权限。辅助程序尚无 Developer ID 公证，仍需在你的机器上完成原生授权验收。
+
+将以下内容保存为配置目录中的 `calendars.json`，把占位符替换为**辅助程序的绝对路径**和选定的日历 ID。JSON 不会展开 `$HOME` 或 Shell 变量。
+
+```json
+{
+  "sources": [{
+    "id": "mac-calendar",
+    "kind": "macos",
+    "calendar_ids": ["SELECTED_CALENDAR_ID"],
+    "bridge_path": "/absolute/skill/path/references/native/darwin-arm64/work-pilot-eventkit"
+  }]
+}
+```
+
+</details>
+
+<details>
+<summary><strong>Google 日历：提供只读 OAuth 访问令牌</strong></summary>
+
+在 Google Cloud 项目中启用 Calendar API，配置 OAuth 同意屏幕与客户端凭据，通过你自己的 OAuth 客户端完成用户授权。使用可读取事件的权限，例如：
+
+```text
+https://www.googleapis.com/auth/calendar.events.readonly
+```
+
+仅忙闲或仅日历元信息权限无法读取事件详情。参见 Google 官方的[权限说明](https://developers.google.com/workspace/calendar/api/auth)和 [OAuth 配置指南](https://developers.google.com/workspace/guides/configure-oauth-consent)。
+
+把得到的 **access token** 放入环境变量，不要填入 client secret、API key 或 refresh token：
+
+```sh
+export WORK_PILOT_GOOGLE_TOKEN='YOUR_OAUTH_ACCESS_TOKEN'
+```
+
+保存为 `calendars.json`；`primary` 表示已授权账号的主日历。其他日历使用 Google 日历设置中的日历 ID，并确认该账号有读取权限。
+
+```json
+{
+  "sources": [{
+    "id": "google-work",
+    "kind": "google",
+    "calendar_ids": ["primary"],
+    "token_env": "WORK_PILOT_GOOGLE_TOKEN"
+  }]
+}
+```
+
+v0.1.0 没有内置 OAuth 登录和令牌续期。访问令牌过期后，必须由外部 OAuth 客户端刷新，并将新值传给 Work Pilot；设置一次环境变量不代表以后能持续无人值守访问。
+
+</details>
+
+<details>
+<summary><strong>企业微信日历：提供应用令牌和 cal_id</strong></summary>
+
+请企业管理员准备具有对应日历 API 访问能力的应用，通过企业的凭据管理流程获取应用 `access_token`，并取得选定日历的 `cal_id`。当前适配器读取的是**由该应用创建、且该应用有权访问的日历**，不能承诺读取普通个人日历。企业微信日历授权与群机器人 Webhook 是两套独立配置。
+
+```sh
+export WORK_PILOT_WECOM_TOKEN='YOUR_APPLICATION_ACCESS_TOKEN'
+```
+
+```json
+{
+  "sources": [{
+    "id": "wecom-work",
+    "kind": "wecom",
+    "calendar_ids": ["APPLICATION_CAL_ID"],
+    "token_env": "WORK_PILOT_WECOM_TOKEN"
+  }]
+}
+```
+
+保存为 `calendars.json`。令牌获取与续期需外部完成，不会自动复用其他 Agent 或插件的登录。此适配器暂不支持重复日程与全天事件规范化。应用权限不满足时，可改用受支持的 ICS 导出，不能把访问失败当成没有日程。
+
+</details>
+
+<details>
+<summary><strong>Linux/Windows 本地日历：读取导出的 ICS 文件</strong></summary>
+
+在日历应用中将选定日历导出为本地 `.ics` 文件，然后保存配置：
+
+```json
+{
+  "sources": [{
+    "id": "local-export",
+    "kind": "ics",
+    "calendar_ids": ["work"],
+    "ics_files": {"work": "/absolute/path/work.ics"}
+  }]
+}
+```
+
+Windows 路径可写成 `C:/Users/YOU/Calendars/work.ics`，或使用转义后的反斜杠。导出工具需要将重复日程展开为独立事件；Work Pilot 不展开 ICS 重复规则，也不直接监控日历应用。日历更新后需重新导出。
+
+</details>
+
+同时接入多个来源时，将已配置的来源对象合并到同一个 `sources` 数组，每个 `id` 保持唯一。选择包含已知日程的一小段时间进行验证，替换成实际日期和时区偏移：
+
+```sh
+"$WP_BIN" calendar query --config "$WP_CONFIG_DIR/calendars.json" \
+  --from 2026-11-06T00:00:00+08:00 --to 2026-11-07T00:00:00+08:00
+"$WP_BIN" agenda --date 2026-11-06 \
+  --calendar-config "$WP_CONFIG_DIR/calendars.json"
+```
+
+检查退出码、`ok`、`incomplete`，以及每个来源的 `verified`、`missing`、`synced_at`。将一条已知日程的标题、时间和时区与原日历对照。授权错误或未核实的缓存不算“成功查询到空日历”。这些命令不会创建、修改或取消外部日程。
+
+## 发送邮件或聊天提醒
+
+v0.1.0 通过**提醒派发**发送消息，没有通用的 `send` 命令。首次验证请选择一个明确授权的目标，并使用独立测试资料，避免误发正常资料中已有的待发提醒。
+
+### 1. 准备一个通知渠道
+
+邮件需要邮箱服务商提供的 SMTP 地址与端口、允许使用的发件地址，以及 SMTP 凭据或应用专用密码。当前未实现仅支持 OAuth 的 SMTP 认证。按服务商配置使用 STARTTLS（通常为587端口）或直连 TLS（`tls`，通常为465端口）。
+
+```sh
+export WORK_PILOT_SMTP_USER='YOUR_SMTP_USERNAME'
+export WORK_PILOT_SMTP_PASSWORD='YOUR_SMTP_APP_PASSWORD'
+```
+
+保存为 `$WP_CONFIG_DIR/channels.json`，替换示例地址和服务器：
+
+```json
+{
+  "channels": [{
+    "id": "test-channel",
+    "channel": "email",
+    "target": "me@example.com",
+    "target_kind": "self",
+    "authorized": true,
+    "endpoint": "smtp.example.com:587",
+    "from": "me@example.com",
+    "username_env": "WORK_PILOT_SMTP_USER",
+    "password_env": "WORK_PILOT_SMTP_PASSWORD",
+    "tls_mode": "starttls"
+  }]
+}
+```
+
+聊天消息需要在明确选定的群中创建自定义群机器人，取得 Webhook。选择聊天渠道时，用以下配置**替换**上面的邮件配置：
+
+```sh
+export WORK_PILOT_CHAT_WEBHOOK='YOUR_GROUP_ROBOT_HTTPS_WEBHOOK'
+```
+
+```json
+{
+  "channels": [{
+    "id": "test-channel",
+    "channel": "wecom",
+    "target": "NAME_OF_AUTHORIZED_GROUP",
+    "target_kind": "group",
+    "authorized": true,
+    "additional_authorization": true,
+    "endpoint_env": "WORK_PILOT_CHAT_WEBHOOK"
+  }]
+}
+```
+
+`channel` 按实际服务填 `wecom`、`feishu` 或 `dingtalk`，并使用对应平台的 Webhook。`target` 记录核对过的群名称，真正的接收群由 Webhook 决定，两者都要核实。邮件发给其他人时，授权后使用 `target_kind: "other"` 和 `additional_authorization: true`。这些布尔值仅记录已有授权，不会替你取得同意。
+
+机器人自身的安全策略仍然有效。例如要求关键词时，提醒标题或正文必须包含该关键词；IP 白名单应覆盖实际发送主机。当前不支持飞书/钉钉签名模式，若组织强制要求签名或禁止自定义机器人，v0.1.0 无法使用该渠道。平台配置参见官方的[飞书机器人指南](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot)和[钉钉机器人指南](https://open.dingtalk.com/document/robots/custom-robot-access)。日历令牌不能用于授权机器人发消息，机器人 Webhook 也不能读取日历。
+
+### 2. 保存单次测试规则并预览
+
+以下仅用 Python3 生成即时测试所需的时间。按实际情况替换时区，并保留打印出的测试资料路径，方便稍后核对结果。
+
+```sh
+WP_TEST_DATA="$(mktemp -d)"
+printf '%s\n' "$WP_TEST_DATA"
+"$WP_BIN" --data-dir "$WP_TEST_DATA" config set \
+  --timezone Asia/Shanghai --workdays 1,2,3,4,5 \
+  --device-id connection-test --reminder-device-id connection-test
+python3 - <<'PYRULE' > "$WP_CONFIG_DIR/test-rule.json"
+import datetime, json
+print(json.dumps({
+    "kind": "once", "title": "Work Pilot connection test",
+    "body": "One explicitly authorized connection test.",
+    "timezone": "Asia/Shanghai", "channel_id": "test-channel",
+    "at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
+    "expires_after_minutes": 10, "authorized": True, "enabled": True
+}))
+PYRULE
+"$WP_BIN" --data-dir "$WP_TEST_DATA" reminder save \
+  --file "$WP_CONFIG_DIR/test-rule.json"
+"$WP_BIN" --data-dir "$WP_TEST_DATA" reminder dispatch
+```
+
+预览会保存到期原因，但不会发送，也不会验证 SMTP/Webhook 凭据。继续前核对规则、渠道和接收目标；机器人要求关键词时修改正文。超过十分钟后请重新创建经过核对的测试规则，不要修改检查时钟来强行发送已过期通知。
+
+### 3. 发送一次并核对结果
+
+下面的命令会向配置的目标执行**真实外部发送**：
+
+```sh
+"$WP_BIN" --data-dir "$WP_TEST_DATA" reminder dispatch \
+  --channels "$WP_CONFIG_DIR/channels.json" --send
+"$WP_BIN" --data-dir "$WP_TEST_DATA" reminder deliveries
+```
+
+Windows 创建相同 JSON 文件，选择独立的 `$WP_TEST_DATA` 目录，并使用 `& $WP_BIN --data-dir $WP_TEST_DATA ...`。派发前，在同一个 PowerShell 会话中设置 SMTP/Webhook 环境变量。
+
+`sent` 表示服务端已接受，仍需到收件箱或群里核对；`failed` 表示明确失败，修正凭据、收件人或平台策略后，再明确授权新的测试。`unknown` 或执行中断留下的 `claimed` 需要先调查，不能盲目重发；v0.1.0 没有自动核对或重试这类发送的命令。`attempts` 为空也不代表已送达，应检查规则时间、有效期、免打扰、授权和提醒设备设置。
+
+验证通过后，再在正常资料中配置经过确认的提醒规则。无人值守运行需单独配置 Agent 宿主、launchd、systemd/cron 或 Windows 任务计划程序，以相同的 CLI 绝对路径、数据目录和凭据运行 `reminder dispatch --channels ABSOLUTE_CHANNELS_PATH --send`。每次派发会先检查到期规则。保存规则或设置早晚偏好不会安装调度；宿主需要运行，令牌也必须持续有效。周期规则、免打扰和其他通知字段参见[完整配置参考](https://github.com/HuangChenning/work-pilot/blob/v0.1.0/skills/work-pilot/references/configuration.md)。
+
 ## 能力与验收限制
 
 - **本地记录：** 任务、进展日志、状态历史、筛选查询、每日安排与总结，区分日期级和精确时刻的截止时间。Markdown 导出、按完成月份归档、回收与恢复、一致的本地备份与恢复，均已实现并通过本地测试。
