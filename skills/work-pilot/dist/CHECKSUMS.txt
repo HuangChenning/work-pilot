@@ -1,0 +1,6 @@
+2605898906e73fb0da3c2f657b06b92fb436768227ac104bfca43bd4f6ea6fc9  work-pilot-0.1.0-linux-amd64.tar.gz
+2d2f30ae050cdbe039fb9fe696eee79a7abb2f0413cf01b83fe0274eff32e9a5  work-pilot-0.1.0-linux-arm64.tar.gz
+3cf0117308c5a4bdb3e882b8805a10f1fd5b78ed45d8b46b2f83d04d8b8912b7  work-pilot-0.1.0-darwin-arm64.tar.gz
+56cc4b084c870f15e3b9322d1c10d3386e4f5eb5b20fec692f2cd4168da17bb4  work-pilot-0.1.0-darwin-amd64.tar.gz
+d7b2616dfa58352bb1595ad74f0776a2c02996ee196e738c4cf6c69763bdf90f  work-pilot-0.1.0-windows-amd64.zip
+f707f4db76d19af41cf42709f9018727c792b4f45577c90d392f61091fa6474a  release.json

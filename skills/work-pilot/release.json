@@ -1,0 +1,71 @@
+{
+  "product_version": "0.1.0",
+  "interface_version": 1,
+  "database_version": 2,
+  "managed_files": {
+    "SKILL.md": "42fa8092434899208d8c2ce8e11741d39b162776835b43552768e907eae874b2",
+    "references/commands.md": "aa0f5634f210e1e03bbfdc5da831f551fdb30c4137c035fa5508bf3a260d9501",
+    "references/configuration.md": "f6919b1b14d92d00cb265c31d19081414072e2e7341f14677890acde384d58a0",
+    "references/native/darwin-amd64/work-pilot-eventkit": "b2bc70b2abddb543f050084111fa6e3abd3e52716716f427b07ecb3853f6eb32",
+    "references/native/darwin-arm64/work-pilot-eventkit": "68c7a65f7c8bc30b0b8342fab84897f0523634d5a5b75d3feaf12b7454378d25",
+    "references/setup.md": "bf047dab9ef668376d83c5c79ece773d63a331e036605a56059fbfca58073770",
+    "references/third-party-licenses/Go-LICENSE.txt": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+    "references/third-party-licenses/github.com_dustin_go-humanize_v1.1.0.txt": "6878d85773aa065cc0adf7bea2b4fd7e09ea0d39b4ca5da74397cef25a533e27",
+    "references/third-party-licenses/github.com_google_pprof_v0.0.0-20261016150608-1facf8f91b50.txt": "59dd3cc8f677dd5e8da5d023764238d437da5ad0c6afec31198157444829c2c5",
+    "references/third-party-licenses/github.com_google_uuid_v1.6.0.txt": "dc04132ca39eb12e46e3e19bb1eb6cadd9a2b172758e1a310da91c2b88f1be11",
+    "references/third-party-licenses/github.com_hashicorp_golang-lru_v2_v2.0.7.txt": "fef441856acfd3034e8765774a257c0552acea1d51fff0138be773da051a8b33",
+    "references/third-party-licenses/github.com_mattn_go-isatty_v0.0.24.txt": "c8594a4c240bee680395529ccfb3abbd71f905454a7faae36ad7c30ab3d8f0e8",
+    "references/third-party-licenses/github.com_ncruces_go-strftime_v1.1.0.txt": "03e4c4675fd6e4f9169018350743830412f2f1ae22e50fc1d691c004c3bf67db",
+    "references/third-party-licenses/github.com_remyoudompheng_bigfft_v0.0.0-20230129092748-24d4a6f8daec.txt": "ba0d2f0a59765b815f2300579247dee7ce8f0b4733b1723693bb9268dc83fc7d",
+    "references/third-party-licenses/golang.org_x_mod_v0.42.0.txt": "b2390b2900375116afafc1fe3ebe2c71672490fb6dd4ceeedab19656cfe74a89",
+    "references/third-party-licenses/golang.org_x_sync_v0.24.0.txt": "47e0f6fa678b6fd27692e5d967d29a383b9ff5f39ebd6911bfa0cf753ed1a9b7",
+    "references/third-party-licenses/golang.org_x_sys_v0.49.0.txt": "ab91dddbb110b877958e6c8894c7471fff6e0cba41b1ef4a83bda754a0d0b3e8",
+    "references/third-party-licenses/golang.org_x_tools_v0.52.0.txt": "e1e326020f6c68951b2491ae7cdcc99f6a6892575744755544c5030ef5e2b94a",
+    "references/third-party-licenses/modernc.org_cc_v4_v4.30.3.txt": "3bfefbdc865d62ddd1a18406ea07eb040ebd5e4b40ab6e1e4e0379e2cdb4d577",
+    "references/third-party-licenses/modernc.org_ccgo_v4_v4.37.0.txt": "501989458f4d922f1d09174c93bd15bd3ff68af91eb1daa055e8ba24242673da",
+    "references/third-party-licenses/modernc.org_fileutil_v1.4.0.txt": "adffc9718ffc2c0813cceacd9eca3429ed0813426c629b033fb2a341800a37c1",
+    "references/third-party-licenses/modernc.org_gc_v2_v2.6.5.txt": "163255d93a0009797e96fc4b49ad4147c9147fcb2f9a10ee67b54a19dc2d2feb",
+    "references/third-party-licenses/modernc.org_gc_v3_v3.2.0.txt": "cafa7ea3bcb1a39c0fa9b63c8350ade8300df382a6cffd263603037f68d3317f",
+    "references/third-party-licenses/modernc.org_goabi0_v0.2.0.txt": "f29a9158af8988ab0350853c2e3d2dce878bd8f7d5d0e310ad2b866e8163c018",
+    "references/third-party-licenses/modernc.org_libc_v1.79.0.txt": "ea21430cd9e011e038313a3ba7bc4ffa87147f00af242bb738caf6e1de3d213f",
+    "references/third-party-licenses/modernc.org_mathutil_v1.7.1.txt": "5b57e79714c88a87ce4dfa64f4658dea97712b9902e3530b7b0e4aa1d5451687",
+    "references/third-party-licenses/modernc.org_memory_v1.12.1.txt": "e24ed5ac21bb5a270d2c6ec0bfa79494a1b482176194544ebabd39ea7b77a7d2",
+    "references/third-party-licenses/modernc.org_opt_v0.2.0.txt": "e9b01e95bfaec424078af149c02eccb2d744c79e93f98e3b9324e52eaca7bf89",
+    "references/third-party-licenses/modernc.org_sortutil_v1.2.1.txt": "5b3a1c6000f5a4f6eb6548cc89b0b0d43609b73a9e90c2cf403340bc7e9e8590",
+    "references/third-party-licenses/modernc.org_sqlite_v1.61.0.txt": "b07ea5434e29ca1737f27e00802bbaaba8702bc5f28d1bd5b3584485cebe6498",
+    "references/third-party-licenses/modernc.org_strutil_v1.2.1.txt": "e443449a12dd224647050be02fd915b9ab9c482e371c16a2374304ccca804fd6",
+    "references/third-party-licenses/modernc.org_token_v1.1.0.txt": "cd7e62fc1c48403d02a23b2c25f65b04f56a6a0e3afac5efa443ccb85ddf72ed"
+  },
+  "artifacts": [
+    {
+      "platform": "darwin-arm64",
+      "url": "https://github.com/HuangChenning/work-pilot/releases/download/v0.1.0/work-pilot-0.1.0-darwin-arm64.tar.gz",
+      "sha256": "3cf0117308c5a4bdb3e882b8805a10f1fd5b78ed45d8b46b2f83d04d8b8912b7",
+      "format": "tar.gz"
+    },
+    {
+      "platform": "darwin-amd64",
+      "url": "https://github.com/HuangChenning/work-pilot/releases/download/v0.1.0/work-pilot-0.1.0-darwin-amd64.tar.gz",
+      "sha256": "56cc4b084c870f15e3b9322d1c10d3386e4f5eb5b20fec692f2cd4168da17bb4",
+      "format": "tar.gz"
+    },
+    {
+      "platform": "linux-arm64",
+      "url": "https://github.com/HuangChenning/work-pilot/releases/download/v0.1.0/work-pilot-0.1.0-linux-arm64.tar.gz",
+      "sha256": "2d2f30ae050cdbe039fb9fe696eee79a7abb2f0413cf01b83fe0274eff32e9a5",
+      "format": "tar.gz"
+    },
+    {
+      "platform": "linux-amd64",
+      "url": "https://github.com/HuangChenning/work-pilot/releases/download/v0.1.0/work-pilot-0.1.0-linux-amd64.tar.gz",
+      "sha256": "2605898906e73fb0da3c2f657b06b92fb436768227ac104bfca43bd4f6ea6fc9",
+      "format": "tar.gz"
+    },
+    {
+      "platform": "windows-amd64",
+      "url": "https://github.com/HuangChenning/work-pilot/releases/download/v0.1.0/work-pilot-0.1.0-windows-amd64.zip",
+      "sha256": "d7b2616dfa58352bb1595ad74f0776a2c02996ee196e738c4cf6c69763bdf90f",
+      "format": "zip"
+    }
+  ]
+}
