@@ -1,6 +1,6 @@
 # Work Pilot
 
-[简体中文](README.zh-CN.md) · [v0.1.0 packages](https://github.com/HuangChenning/work-pilot/releases/tag/v0.1.0)
+[简体中文](README.zh-CN.md) · [v0.2.0 packages](https://github.com/HuangChenning/work-pilot/releases/tag/v0.2.0)
 
 A personal work assistant for AI Agents: keep task history, prepare daily plans, and follow up on unfinished work through a local CLI.
 
@@ -8,7 +8,7 @@ A personal work assistant for AI Agents: keep task history, prepare daily plans,
 
 Work Pilot combines a portable Agent Skill with a Go CLI and a local SQLite database. It supports persistent tasks and progress, daily agendas, summaries, Markdown archives, backups, and explicitly configured calendar and reminder integrations. One person can use the same local records across Agents.
 
-**v0.1.0 validation:** macOS Apple Silicon has been run natively. The other four platform binaries are cross-compiled. External calendars, notification delivery, unattended host scheduling, and real GitHub data handoff still need authorized live acceptance.
+**v0.2.0 validation:** macOS Apple Silicon has been run natively. Official wecom-cli personal calendar reads (ordinary, weekly and monthly occurrences) and one authorized personal message have passed live acceptance. The other four platform binaries are cross-compiled; other live integrations, unattended scheduling, edited/cancelled calendar exceptions and real GitHub data handoff still need acceptance.
 
 ## Example: record a task, then find it in the agenda
 
@@ -43,27 +43,27 @@ Personal data lives outside the Skill installation. Generated `todo.md` and `arc
 
 ## Getting started
 
-Download your archive and `CHECKSUMS.txt` from [v0.1.0](https://github.com/HuangChenning/work-pilot/releases/tag/v0.1.0). Each archive includes both READMEs, a CLI, and a `skill/` directory with the matching Skill, references, and nested platform binary.
+Download your archive and `CHECKSUMS.txt` from [v0.2.0](https://github.com/HuangChenning/work-pilot/releases/tag/v0.2.0). Each archive includes both READMEs, a CLI, and a `skill/` directory with the matching Skill, references, and nested platform binary.
 
 | Platform | Archive |
 | --- | --- |
-| macOS Apple Silicon | `work-pilot-0.1.0-darwin-arm64.tar.gz` |
-| macOS Intel | `work-pilot-0.1.0-darwin-amd64.tar.gz` |
-| Linux arm64 | `work-pilot-0.1.0-linux-arm64.tar.gz` |
-| Linux amd64 | `work-pilot-0.1.0-linux-amd64.tar.gz` |
-| Windows amd64 | `work-pilot-0.1.0-windows-amd64.zip` |
+| macOS Apple Silicon | `work-pilot-0.2.0-darwin-arm64.tar.gz` |
+| macOS Intel | `work-pilot-0.2.0-darwin-amd64.tar.gz` |
+| Linux arm64 | `work-pilot-0.2.0-linux-arm64.tar.gz` |
+| Linux amd64 | `work-pilot-0.2.0-linux-amd64.tar.gz` |
+| Windows amd64 | `work-pilot-0.2.0-windows-amd64.zip` |
 
 ### macOS or Linux
 
 For a **new Codex installation** with no existing `work-pilot` Skill directory, the macOS arm64 example is:
 
 ```sh
-shasum -a 256 work-pilot-0.1.0-darwin-arm64.tar.gz
+shasum -a 256 work-pilot-0.2.0-darwin-arm64.tar.gz
 # Compare the digest with CHECKSUMS.txt before extracting.
-mkdir work-pilot-0.1.0
-tar -xzf work-pilot-0.1.0-darwin-arm64.tar.gz -C work-pilot-0.1.0
+mkdir work-pilot-0.2.0
+tar -xzf work-pilot-0.2.0-darwin-arm64.tar.gz -C work-pilot-0.2.0
 mkdir -p "$HOME/.codex/skills"
-cp -R work-pilot-0.1.0/skill "$HOME/.codex/skills/work-pilot"
+cp -R work-pilot-0.2.0/skill "$HOME/.codex/skills/work-pilot"
 WP_SKILL_DIR="$HOME/.codex/skills/work-pilot"
 WP_BIN="$WP_SKILL_DIR/bin/darwin-arm64/work-pilot"
 "$WP_BIN" version
@@ -78,9 +78,9 @@ Substitute the archive and `bin/<platform>/` path for your platform. Linux can u
 Compare `Get-FileHash -Algorithm SHA256` with `CHECKSUMS.txt`, extract the ZIP, and copy `skill/` into your Agent's Skill directory. For a new Codex installation in PowerShell:
 
 ```powershell
-Expand-Archive .\work-pilot-0.1.0-windows-amd64.zip .\work-pilot-0.1.0
+Expand-Archive .\work-pilot-0.2.0-windows-amd64.zip .\work-pilot-0.2.0
 New-Item -ItemType Directory -Force "$HOME\.codex\skills" | Out-Null
-Copy-Item -Recurse .\work-pilot-0.1.0\skill "$HOME\.codex\skills\work-pilot"
+Copy-Item -Recurse .\work-pilot-0.2.0\skill "$HOME\.codex\skills\work-pilot"
 $WP_SKILL_DIR = "$HOME\.codex\skills\work-pilot"
 $WP_BIN = "$WP_SKILL_DIR\bin\windows-amd64\work-pilot.exe"
 & $WP_BIN version
@@ -159,7 +159,7 @@ Save as `calendars.json`; `primary` selects the authorized account's primary cal
 }
 ```
 
-v0.1.0 has no built-in OAuth login or token refresh. Your external OAuth client must refresh expired access tokens and provide the new value to Work Pilot; exporting a token once does not establish unattended access.
+v0.2.0 has no built-in OAuth login or token refresh. Your external OAuth client must refresh expired access tokens and provide the new value to Work Pilot; exporting a token once does not establish unattended access.
 
 </details>
 
@@ -220,7 +220,7 @@ Check the exit code, `ok`, `incomplete`, and each source's `verified`, `missing`
 
 ## Send email or chat reminders
 
-v0.1.0 sends messages through **reminder dispatch**, not a general-purpose `send` command. Start with one explicitly authorized destination and an isolated test profile so that no existing queued reminders are sent accidentally.
+v0.2.0 sends messages through **reminder dispatch**, not a general-purpose `send` command. Start with one explicitly authorized destination and an isolated test profile so that no existing queued reminders are sent accidentally.
 
 ### 1. Prepare one channel
 
@@ -272,7 +272,7 @@ export WORK_PILOT_CHAT_WEBHOOK='YOUR_GROUP_ROBOT_HTTPS_WEBHOOK'
 
 Use `wecom`, `feishu` or `dingtalk` for `channel`, matching that service's Webhook. `target` labels the reviewed group; the actual group is determined by the Webhook, so verify both. For email to someone else, use `target_kind: "other"` with `additional_authorization: true` after obtaining that authorization. Boolean flags record consent; they do not obtain it.
 
-Robot security policies still apply. For example, if an allowed keyword is required, include that keyword in the reminder's title/body; configure any IP allowlist for the actual sending host. Signed Feishu/DingTalk modes are unsupported. If your organization requires signatures or forbids custom robots, that channel is unavailable with v0.1.0. See the official [Feishu robot guide](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot) and [DingTalk robot guide](https://open.dingtalk.com/document/robots/custom-robot-access) for service setup. A calendar token does not authorize robot messages, and robot Webhooks do not read calendars.
+Robot security policies still apply. For example, if an allowed keyword is required, include that keyword in the reminder's title/body; configure any IP allowlist for the actual sending host. Signed Feishu/DingTalk modes are unsupported. If your organization requires signatures or forbids custom robots, that channel is unavailable with v0.2.0. See the official [Feishu robot guide](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot) and [DingTalk robot guide](https://open.dingtalk.com/document/robots/custom-robot-access) for service setup. A calendar token does not authorize robot messages, and robot Webhooks do not read calendars.
 
 ### 2. Save a one-shot test rule and preview it
 
@@ -313,27 +313,137 @@ The next command performs a **real external send** to the configured destination
 
 On Windows, create the same JSON files, choose an isolated `$WP_TEST_DATA` directory, and use `& $WP_BIN --data-dir $WP_TEST_DATA ...`. Set SMTP/Webhook environment variables in that PowerShell session before dispatch.
 
-`sent` means the service accepted the message; confirm it in the inbox/group. `failed` means a definite failure; fix credentials, recipient or service policy and explicitly authorize a new test. `unknown` or an interrupted `claimed` delivery needs investigation before another send; do not blindly retry. v0.1.0 has no automatic delivery reconciliation/retry command. An empty `attempts` list is not proof of delivery: inspect rule time, expiry, quiet hours, authorization and reminder-device settings.
+`sent` means the service accepted the message; confirm it in the inbox/group. `failed` means a definite failure; fix credentials, recipient or service policy and explicitly authorize a new test. `unknown` or an interrupted `claimed` delivery needs investigation before another send; do not blindly retry. v0.2.0 has no automatic delivery reconciliation/retry command. An empty `attempts` list is not proof of delivery: inspect rule time, expiry, quiet hours, authorization and reminder-device settings.
 
-After this succeeds, configure reviewed rules in your normal profile. For unattended operation, separately configure the Agent host, launchd, systemd/cron or Windows Task Scheduler to run `reminder dispatch --channels ABSOLUTE_CHANNELS_PATH --send` with the same absolute CLI path, data directory and credentials. Each run checks due rules before dispatch. Saving a rule or setting morning/evening preferences does not install that schedule; the host must be running and tokens must remain valid. See the [full configuration reference](https://github.com/HuangChenning/work-pilot/blob/v0.1.0/skills/work-pilot/references/configuration.md) for recurring rules, quiet hours and other channel fields.
+After this succeeds, configure reviewed rules in your normal profile. For unattended operation, separately configure the Agent host, launchd, systemd/cron or Windows Task Scheduler to run `reminder dispatch --channels ABSOLUTE_CHANNELS_PATH --send` with the same absolute CLI path, data directory and credentials. Each run checks due rules before dispatch. Saving a rule or setting morning/evening preferences does not install that schedule; the host must be running and tokens must remain valid. See the [full configuration reference](https://github.com/HuangChenning/work-pilot/blob/v0.2.0/skills/work-pilot/references/configuration.md) for recurring rules, quiet hours and other channel fields.
 
 ## Capabilities and acceptance limits
 
 - **Local records:** tasks, progress logs, state history, filtered queries, daily agendas and summaries; date-only and exact-time deadlines stay distinct. Markdown export, monthly completion archives, trash/restore, and consistent local backup/restore are implemented and locally tested.
-- **Read-only calendars:** Google Calendar, enterprise WeChat app-created calendars, ICS files, and a macOS native helper. WeChat recurrence is unsupported. macOS requires native calendar permission; Linux and Windows can use supported ICS sources rather than arbitrary calendar apps. Fixtures are tested; actual accounts and native calendar access await authorization and acceptance.
-- **Reminders:** saved rules, recurrence, quiet hours, durable delivery states, and designated-device checks. Host scheduling is configured separately; saving a rule does not start a schedule. Unattended execution and delivery await live acceptance.
-- **Notifications:** SMTP email and enterprise WeChat, Feishu, and DingTalk group webhooks are fixture-tested. Personal-message delivery and signed robot modes are unsupported. Each target needs explicit authorization. Unknown send outcomes are preserved without blind automatic retries.
+- **Read-only calendars:** Google Calendar, enterprise WeChat app-created calendars, official wecom-cli personal schedules, ICS files, and a macOS native helper. The official CLI connector reads service-expanded recurring instances; the legacy app-calendar connector does not expand recurrence. macOS requires native calendar permission; Linux and Windows can use supported ICS sources rather than arbitrary calendar apps. Official wecom-cli ordinary/weekly/monthly reads have passed live acceptance; other accounts and native calendar access still need acceptance.
+- **Reminders:** saved rules, recurrence, quiet hours, durable delivery states, and designated-device checks. Host scheduling is configured separately; saving a rule does not start a schedule. Official wecom-cli one-shot personal delivery has passed live acceptance; unattended execution and other channels still need acceptance.
+- **Notifications:** SMTP email and enterprise WeChat, Feishu, and DingTalk group webhooks are fixture-tested. Official wecom-cli recent-conversation Markdown delivery has passed a live personal-message test. Signed webhook robot modes are unsupported. Each target needs explicit authorization. Unknown send outcomes are preserved without blind automatic retries.
 - **Optional GitHub backup:** a separate private data repository supports snapshots and sequential device handoff with conflict checks. Fixture-tested; no real remote acceptance yet. Concurrent offline edits are not automatically merged, and handoff does not enable a second reminder device.
 
 A failed calendar source is reported as missing or unverified; an absent event is not assumed cancelled. A saved rule, an enabled host schedule, and confirmed delivery are separate states. Calendar events and related preparation tasks keep independent statuses.
+
+## Official wecom-cli integration
+
+**v0.2.0** includes personal calendar reads and authorized recent-conversation Markdown messages through official [wecom-cli](https://github.com/WecomTeam/wecom-cli), version **1.3.4 or newer**. Use the installed `WP_BIN`, then check `version` and `capabilities` for `calendar.wecom_cli` and `notify.wecom_cli`. The connector completed one authorized live message test on macOS arm64, with service acceptance and recipient-confirmed receipt. Live read-only acceptance also verified ordinary, weekly and monthly schedule instances, including times, timezone, participants and stable identities across overlapping queries.
+
+### 1. Configure authorization and environment
+
+Install the official native executable separately; Windows requires `.exe`, rather than a `.cmd`/`.bat` wrapper. Choose one authorization method:
+
+- **Authorized directory:** run the official `wecom-cli auth init` yourself, then reuse that profile under the same OS user. The default directory is `~/.config/wecom`.
+- **Official token:** inject `WECOM_CLI_ACCESS_TOKEN` through the Agent/scheduler's secret environment. It overrides stored credentials; replace it when it expires.
+
+Work Pilot uses these fixed variable names:
+
+| Variable | Configuration |
+| --- | --- |
+| `WORK_PILOT_WECOM_CLI_PATH` | Optional absolute path to the official native executable; defaults to `wecom-cli` on PATH. |
+| `WECOM_CLI_ACCESS_TOKEN` | Official Bearer token; optional when using an authorized directory. |
+| `WECOM_CLI_CONFIG_DIR` | Optional absolute authorized profile directory; defaults to `~/.config/wecom`. |
+| `WECOM_CLI_ADDITIONAL_HEADERS` | Optional JSON object of string-valued request headers. |
+| `WECOM_CLI_ADDITIONAL_HEADERS_*` | Optional additional header objects using official suffix semantics. |
+
+For an already authorized profile on macOS/Linux:
+
+```sh
+export WORK_PILOT_WECOM_CLI_PATH="/absolute/path/to/wecom-cli"
+export WECOM_CLI_CONFIG_DIR="$HOME/.config/wecom"
+WP_CONFIG_DIR="$HOME/.config/work-pilot-connections"
+mkdir -p "$WP_CONFIG_DIR"
+"$WP_BIN" wecom status
+```
+
+For PowerShell:
+
+```powershell
+$env:WORK_PILOT_WECOM_CLI_PATH = 'C:\Tools\wecom-cli.exe'
+$env:WECOM_CLI_CONFIG_DIR = "$HOME\.config\wecom"
+$WP_CONFIG_DIR = "$HOME\.config\work-pilot-connections"
+New-Item -ItemType Directory -Force -Path $WP_CONFIG_DIR | Out-Null
+& $WP_BIN wecom status
+```
+
+In token mode, inject the token into the same process environment instead of copying it into JSON or shared transcripts. Additional headers are normally unnecessary; if required, their value must be valid JSON such as `{"X-Tenant":"your-tenant"}`. Work Pilot does not read project `.env` files or accept Bot ID/Secret initialization variables. The Agent and any scheduler must inherit the selected environment. Keep credentials and connection files outside this repository and the Skill installation.
+
+`authorized_material: true` confirms local material exists; `remote_validity: "not_checked"` means server validity and permissions still need a requested read. Work Pilot does not initialize authorization automatically; official wecom-cli may refresh stored credentials or migrate legacy profiles during startup.
+
+### 2. Configure the personal calendar
+
+Save as `$WP_CONFIG_DIR/wecom-calendars.json`. Set `account_timezone` to the authorized account's actual IANA timezone:
+
+```json
+{
+  "sources": [{
+    "id": "wecom-personal",
+    "kind": "wecom-cli",
+    "calendar_ids": ["authorized-user"],
+    "account_timezone": "Asia/Shanghai"
+  }]
+}
+```
+
+```sh
+"$WP_BIN" calendar query --config "$WP_CONFIG_DIR/wecom-calendars.json" \
+  --from 2026-10-30T00:00:00+08:00 --to 2026-10-31T00:00:00+08:00
+"$WP_BIN" agenda --date 2026-10-30 \
+  --calendar-config "$WP_CONFIG_DIR/wecom-calendars.json"
+```
+
+Replace the example dates with a range within the current time ±30 days. Only the authorized user's personal schedule is supported; keep `calendar_ids` exactly `["authorized-user"]`. Timed ordinary and recurring schedules are supported when the official list returns their individual occurrences, including weekly meetings. Work Pilot preserves each returned occurrence’s actual time and assigns a distinct identity; it does not expand recurrence rules again. Missing timezone/participant metadata is read from series details without replacing occurrence times with the series start date. Rescheduled or omitted instances follow the service response. All-day events, ambiguous DST times or incomplete responses make the source unavailable/incomplete. This connector bypasses persistent calendar caching after account changes. It reads schedules without creating tasks or modifying external calendars.
+
+### 3. Review and bind a message destination
+
+Resolve a unique exact recent conversation name; use `group` for a group or `other` for a personal conversation:
+
+```sh
+"$WP_BIN" wecom target --name "Reviewed team group" --kind group
+```
+
+This command reads recent sessions and returns an opaque `authorization_binding`; it sends nothing and does not grant consent. After reviewing and authorizing the destination, save `$WP_CONFIG_DIR/wecom-channels.json`, replacing the name and binding:
+
+```json
+{
+  "channels": [{
+    "id": "wecom-reviewed",
+    "channel": "wecom-cli",
+    "target": "Reviewed team group",
+    "target_kind": "group",
+    "authorized": true,
+    "additional_authorization": true,
+    "authorization_binding": "REPLACE_WITH_RETURNED_BINDING"
+  }]
+}
+```
+
+Both groups and other people require explicit additional authorization. A self-destination shortcut is unavailable. Each send resolves the conversation again and verifies its identity and credential binding. Duplicate/missing names fail. Token rotation, credential refresh/reauthorization, profile/header changes or a replaced conversation may require reviewing the target again and replacing its binding.
+
+### 4. Preview, send and schedule
+
+Use the one-shot test procedure under **Send email or chat reminders**, changing the rule's `channel_id` from `test-channel` to `wecom-reviewed`. Save it in the isolated `WP_TEST_DATA` profile, then inspect the preview. The command with `--send` below performs a **real external send** and requires an authorized reminder plan:
+
+```sh
+"$WP_BIN" --data-dir "$WP_TEST_DATA" reminder dispatch
+"$WP_BIN" --data-dir "$WP_TEST_DATA" reminder dispatch \
+  --channels "$WP_CONFIG_DIR/wecom-channels.json" --send
+"$WP_BIN" --data-dir "$WP_TEST_DATA" reminder deliveries
+```
+
+On Windows use `& $WP_BIN` and the same JSON files. For unattended use, configure the host scheduler separately with the same absolute executable/data/config paths, authorization environment and designated reminder device. Saving a rule or channel does not start a schedule.
+
+Markdown messages are limited to 20,480 UTF-8 bytes including the subject; oversized content fails without splitting. `sent` means service acceptance, so verify actual receipt. Investigate `unknown` or interrupted `claimed` outcomes before another attempt. See the [integration reference](skills/work-pilot/references/wecom-cli.md) for the upstream baseline and detailed limits.
 
 ## Updates and reference
 
 ```sh
 "$WP_BIN" update check
-"$WP_BIN" update --version 0.1.0
+"$WP_BIN" update --version 0.2.0
 ```
 
-Explicit updates check platform, checksums, compatibility, and local Skill edits, then update the CLI and registered Skill locations. Reload sessions that already loaded old instructions. Windows self-update is deferred to manual installation; replace the installed package manually and register its path again. Real release download/update acceptance remains separate from local updater tests.
+Explicit updates check platform, checksums, compatibility, and local Skill edits, then update the CLI and registered Skill locations. Reload sessions that already loaded old instructions. Windows self-update is deferred to manual installation; replace the installed package manually and register its path again. Existing v0.1.0 installations can use the explicit v0.2.0 update command above to update the CLI and registered Skill together.
 
-See the [command reference](https://github.com/HuangChenning/work-pilot/blob/v0.1.0/skills/work-pilot/references/commands.md) for exact syntax, task versions, calendar configuration, and reminder preview/send boundaries; see [setup notes](https://github.com/HuangChenning/work-pilot/blob/v0.1.0/skills/work-pilot/references/setup.md) for authorization, scheduling, and recovery. The [configuration examples](https://github.com/HuangChenning/work-pilot/blob/v0.1.0/skills/work-pilot/references/configuration.md) cover calendar, reminder, channel, and handoff JSON.
+See the [command reference](https://github.com/HuangChenning/work-pilot/blob/v0.2.0/skills/work-pilot/references/commands.md) for exact syntax, task versions, calendar configuration, and reminder preview/send boundaries; see [setup notes](https://github.com/HuangChenning/work-pilot/blob/v0.2.0/skills/work-pilot/references/setup.md) for authorization, scheduling, and recovery. The [configuration examples](https://github.com/HuangChenning/work-pilot/blob/v0.2.0/skills/work-pilot/references/configuration.md) cover calendar, reminder, channel, and handoff JSON.

@@ -39,6 +39,8 @@ Read only the user's selected calendars, when available. Distinguish confirmed s
 
 A past calendar event establishes an arrangement, not attendance or completed work. Summaries use recorded progress and completion. Calendar events and linked tasks keep independent lifecycles; cancellation/completion of one does not change the other without a user instruction.
 
+For official wecom-cli authorization, personal calendar reads or recent-conversation messages, read [wecom-cli integration](references/wecom-cli.md) before configuring or invoking the connector.
+
 ## Reminders and external actions
 
 Before enabling a plan, make its time, timezone, frequency, channel, exact destination, quiet-hour behavior, retry and fallback policy reviewable. A clear user instruction can authorize the complete plan without another ritual confirmation. Respect extra authorization required by the actual connector.

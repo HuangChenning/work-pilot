@@ -1,6 +1,6 @@
 # CLI contract
 
-Run the platform binary's `help` and `capabilities` to discover current commands. Pass `--data-dir PATH` before the command when using an explicitly selected profile. Output is JSON and `ok: false` accompanies a nonzero exit. Commands below are implemented in the development build; other subsystems are available only when listed by the installed binary.
+Run the platform binary's `help` and `capabilities` to discover current commands. Pass `--data-dir PATH` before the command when using an explicitly selected profile. Output is JSON and `ok: false` accompanies a nonzero exit. Commands below are implemented in v0.2.0; other subsystems are available only when listed by the installed binary.
 
 ```text
 work-pilot version
@@ -83,8 +83,13 @@ Channels are stored outside the Skill as a JSON `channels` list. Each entry decl
 work-pilot install register --path INSTALLED_WORK_PILOT_SKILL_DIRECTORY
 work-pilot install list
 work-pilot update check
-work-pilot update check --version 0.1.0
-work-pilot update --version 0.1.0
+work-pilot update check --version 0.2.0
+work-pilot update --version 0.2.0
 ```
 
 Registration records an existing installation; first copy the verified release's Skill folder into the Agent's supported skills location. It does not enable reminders. No version is downloadable until a Release has actually been published. An explicit update refreshes the running CLI and registered Skill locations, subject to compatibility, checksum and local-edit checks. Windows may return a deferred manual-install result while files remain unchanged; report that outcome as deferred, not upgraded.
+
+
+## Official wecom-cli
+
+Read [wecom-cli integration](wecom-cli.md) before authorization, personal calendar queries or recent-conversation sends. `wecom status` checks local material; `wecom target --name EXACT_NAME --kind group|other` resolves a destination binding without sending. All commands remain subject to installed capabilities.

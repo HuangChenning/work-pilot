@@ -4,7 +4,7 @@
 
 The Skill folder contains platform binaries under `bin/`. Use the current OS and architecture; do not attempt to run another platform's binary. The default personal data directory uses the operating system's user configuration directory under `work-pilot`; the CLI's global `--data-dir` explicitly selects another profile. It is independent of the Agent, Skill installation and work project.
 
-This v0.1.0 installation exposes its exact capabilities at runtime. Read `capabilities` before provider, reminder, handoff or update operations. Report a missing command honestly; never emulate durable success with conversational memory.
+This v0.2.0 installation exposes its exact capabilities at runtime. Read `capabilities` before provider, reminder, handoff or update operations. Report a missing command honestly; never emulate durable success with conversational memory.
 
 Read [configuration](configuration.md) for calendar, reminder, channel and private data repository JSON and handoff commands.
 
@@ -13,6 +13,8 @@ Read [configuration](configuration.md) for calendar, reminder, channel and priva
 Selected calendar IDs and an authorized account are required. macOS system calendars need native permission; supported Linux/Windows local sources are listed individually, not inferred from an installed calendar application. Google and enterprise WeChat require their own read-only connections. Some enterprise WeChat APIs are restricted to app-created calendars; report the actual scope. Successful fixtures are not proof that a user's calendar is accessible.
 
 Notification connectors require an explicit destination and authorization. Webhook group robots do not establish personal-message support. SMTP/robot endpoint credentials belong in local secret configuration or environment references, not Skill files, Markdown exports or GitHub data snapshots. Connector-specific confirmation requirements remain binding.
+
+For official wecom-cli authorization, personal calendar reads or recent-conversation messages, read [wecom-cli integration](wecom-cli.md) before configuring the connector.
 
 ## Automation
 
